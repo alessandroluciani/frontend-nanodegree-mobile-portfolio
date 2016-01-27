@@ -53,6 +53,49 @@ module.exports = function(grunt) {
                     module: true
                 }
             }
+        },
+
+
+
+         //Clean 'build' Directory
+        clean: {
+            build: {
+                src: [ 'build' ]
+            }
+        },
+
+        copy: {
+            build: {
+                cwd: 'source',
+                src: [ '**' ],
+                dest: 'build',
+                expand: true
+            }
+        },
+
+        imagemin: {
+            build: {
+                options: {
+                    optimizationLevel: 5
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'source/',
+                    src: ['**/*.{png,jpg,gif}'],
+                    dest: 'build/'
+                }]
+            },
+            dev: {
+                options: {
+                    optimizationLevel: 5
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'source/',
+                    src: ['**/*.{png,jpg,gif}'],
+                    dest: 'source/'
+                }]
+            }
         }
 
 
@@ -128,6 +171,16 @@ module.exports = function(grunt) {
     grunt.registerTask(
         'default',  
         ['watch']
+    );
+
+    grunt.registerTask(
+        'CompressImageDev',  
+        ['imagemin:dev']
+    );
+
+    grunt.registerTask(
+        'Build',  
+        ['clean:build','copy:build','imagemin:build']
     );
 
 
