@@ -469,7 +469,7 @@ var resizePizzas = function(size) {
   var timeToResize = window.performance.getEntriesByName("measure_pizza_resize");
   console.log("Time to resize pizzas: " + timeToResize[timeToResize.length-1].duration + "ms");
 
-}
+};
 
 
 
