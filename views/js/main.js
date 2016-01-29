@@ -476,8 +476,8 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
+var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -521,14 +521,20 @@ function requestFrame() {
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
+
   animation = false; 
   frame++;
   window.performance.mark("mark_start_frame");
 
   var items = document.getElementsByClassName('mover'); //Again avoided query on DOMTree
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((tempScrollY / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  var phase = []; 
+
+  for (var i = 0; i < 5; i++) {
+    phase.push(Math.sin((tempScrollY / 1250) + i) * 100);
+  }
+
+  for (var i = 0, max = items.length; i < max; i++) {
+    items[i].style.left = items[i].basicLeft + phase[i%5] + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -547,12 +553,12 @@ window.addEventListener('scroll', whenScroll);
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   //Trying to calculate only animatedPizzas inside the screen
-  var screenVisibleWidth = screen.availWidth; //get the width
   var screenVisibleHeight = screen.availHeight; //get the height
   var s = 256;
-  var cols = screenVisibleWidth / s; //col for pizzas visible
+  var cols = 8; //col for pizzas visible
   var rows = screenVisibleHeight / s;  //rows for pizzas visible
   var totalAnimatedPizzas = Math.ceil(cols * rows); // Generate pizza total based on available screen dimensions
+
   var animatedPizzasEl = document.getElementById("movingPizzas1"); //Again avoid Query on DOMTree
   for (var i = 0; i < totalAnimatedPizzas; i++) { //totalAnimatedPizzas is better than 200 piazzas fixed
     var elem = document.createElement('img');
